@@ -189,8 +189,9 @@ void device_changed_signal_handler(DBusGProxy *proxy, const char *object_path, g
         // If media was inserted just now, run the post-insertion procedure
         case TRACKED_OBJECT_STATUS_NO_MEDIA:
             if (is_media_available) {
-                tracked_object_set_status(tobj, TRACKED_OBJECT_STATUS_INSERTED);
-                post_insertion_procedure(tobj);
+		/* Treat as if the whole device just went away and came back,
+		   forces rematching of filters, etc */
+		return device_added_signal_handler(proxy, object_path,user_data);
             }
             break;
 
